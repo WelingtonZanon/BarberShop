@@ -26,7 +26,7 @@ public class DB {
 			try {
 				Class.forName(drive);
 				conn = DriverManager.getConnection(url, usuario, senha);
-				//JOptionPane.showMessageDialog(null,"conectou");
+				JOptionPane.showMessageDialog(null,"conectou");
 			} catch (SQLException e) {
 				throw new DbException(e.getMessage());
 			} catch (ClassNotFoundException Drive) {
