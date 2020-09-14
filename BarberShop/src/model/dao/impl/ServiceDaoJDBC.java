@@ -64,6 +64,7 @@ public class ServiceDaoJDBC implements ServiceDao {
 				obj.setId(rs.getInt("SERVICE_ID"));
 				obj.setName(rs.getString("SERVICE_NAME"));
 				obj.setValue(rs.getDouble("SERVICE_VALUE"));
+				obj.setDescription(rs.getString("SERVICE_DESCRIPTION"));
 				list.add(obj);
 			}
 			return list;
@@ -82,13 +83,15 @@ public class ServiceDaoJDBC implements ServiceDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-				"INSERT INTO department " +
-				"(Name) " +
+				"INSERT INTO DERBYDB.SERVICE " +
+				"(SERVICE_NAME,SERVICE_VALUE,SERVICE_DESCRIPTION) " +
 				"VALUES " +
-				"(?)", 
+				"(?,?,?)", 
 				Statement.RETURN_GENERATED_KEYS);
 
 			st.setString(1, obj.getName());
+			st.setDouble(2, obj.getValue());
+			st.setString(3, obj.getDescription());
 
 			int rowsAffected = st.executeUpdate();
 			
@@ -116,12 +119,16 @@ public class ServiceDaoJDBC implements ServiceDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-				"UPDATE department " +
-				"SET Name = ? " +
-				"WHERE Id = ?");
+				"UPDATE DERBYDB.SERVICE " +
+				"SET SERVICE_NAME = ?, " +
+				"SERVICE_VALUE = ?, " +
+				"SERVICE_DESCRIPTION = ? " +
+				"WHERE SERVICE_ID = ?");
 
 			st.setString(1, obj.getName());
-			st.setInt(2, obj.getId());
+			st.setDouble(2, obj.getValue());
+			st.setString(3, obj.getDescription());
+			st.setInt(4, obj.getId());
 
 			st.executeUpdate();
 		}
@@ -138,7 +145,7 @@ public class ServiceDaoJDBC implements ServiceDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-				"DELETE FROM department WHERE Id = ?");
+				"DELETE FROM DERBYDB.SERVICE WHERE SERVICE_ID = ?");
 
 			st.setInt(1, id);
 
