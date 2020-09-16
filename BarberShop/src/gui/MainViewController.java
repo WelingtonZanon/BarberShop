@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.ProductService;
 import model.services.ServiceService;
 
 public class MainViewController implements Initializable {
@@ -35,6 +36,15 @@ public class MainViewController implements Initializable {
 		Conexao.conecta();**/
 		loadView("/gui/ServiceList.fxml", (ServiceListController controller) -> {
 			controller.setServiceService(new ServiceService());
+			controller.updateTableView();
+		});
+	}
+	
+	public void onButtonProductAction() {
+		/**conexao Conexao = new conexao();
+		Conexao.conecta();**/
+		loadView("/gui/ProductList.fxml", (ProductListController controller) -> {
+			controller.setProductService(new ProductService());
 			controller.updateTableView();
 		});
 	}

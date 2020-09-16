@@ -20,15 +20,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import model.entities.Product;
 import model.entities.Service;
 import model.exceptions.ValidationException;
+import model.services.ProductService;
 import model.services.ServiceService;
 
-public class ServiceFormController implements Initializable {
+public class ProductFormController implements Initializable {
 
-	private Service entity;
+	private Product entity;
 	
-	private ServiceService service;
+	private ProductService product;
 	
 	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 	
@@ -39,7 +41,13 @@ public class ServiceFormController implements Initializable {
 	private TextField txtName;
 	
 	@FXML
-	private TextField txtValue;
+	private TextField txtQtd;
+	
+	@FXML
+	private TextField txtValueIn;
+	
+	@FXML
+	private TextField txtValueOut;
 	
 	@FXML
 	private TextArea AreaDescription;
@@ -53,12 +61,12 @@ public class ServiceFormController implements Initializable {
 	@FXML
 	private Button btCancel;
 	
-	public void setService(Service entity) {
+	public void setProduct(Product entity) {
 		this.entity = entity;
 	}
 	
-	public void setServiceService(ServiceService service) {
-		this.service = service;
+	public void setProductService(ProductService product) {
+		this.product = product;
 	}
 	
 	public void subscribeDataChangeListener(DataChangeListener listener) {
@@ -70,12 +78,12 @@ public class ServiceFormController implements Initializable {
 		if (entity == null) {
 			throw new IllegalStateException("Entity was null");
 		}
-		if (service == null) {
+		if (product == null) {
 			throw new IllegalStateException("Service was null");
 		}
 		try {
 			entity = getFormData();
-			service.saveOrUpdate(entity);
+			product.saveOrUpdate(entity);
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 		}
@@ -94,8 +102,8 @@ public class ServiceFormController implements Initializable {
 		}
 	}
 
-	private Service getFormData() {
-		Service obj = new Service();
+	private Product getFormData() {
+		Product obj = new Product();
 		
 		ValidationException exception = new ValidationException("Validation error");
 		
@@ -106,11 +114,20 @@ public class ServiceFormController implements Initializable {
 		}
 		obj.setName(txtName.getText());
 		
-				
-		if (txtValue.getText() == null || txtValue.getText().trim().equals("")) {
+		if (txtQtd.getText() == null || txtQtd.getText().trim().equals("")) {
 			exception.addError("baseSalary", "Field can't be empty");
 		}
-		obj.setValue(Utils.tryParseToDouble(txtValue.getText()));
+		obj.setQtd(Utils.tryParseToInt(txtQtd.getText()));
+				
+		if (txtValueIn.getText() == null || txtValueIn.getText().trim().equals("")) {
+			exception.addError("baseSalary", "Field can't be empty");
+		}
+		obj.setValuein(Utils.tryParseToDouble(txtValueIn.getText()));
+		
+		if (txtValueOut.getText() == null || txtValueOut.getText().trim().equals("")) {
+			exception.addError("baseSalary", "Field can't be empty");
+		}
+		obj.setValueout(Utils.tryParseToDouble(txtValueOut.getText()));
 		
 		if (AreaDescription.getText() == null || AreaDescription.getText().trim().equals("")) {
 			exception.addError("name", "Field can't be empty");
@@ -138,7 +155,6 @@ public class ServiceFormController implements Initializable {
 	private void initializeNodes() {
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtName, 30);
-		Constraints.setTextFieldDouble(txtValue);
 		
 	}
 	
@@ -148,7 +164,9 @@ public class ServiceFormController implements Initializable {
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtName.setText(entity.getName());
-		txtValue.setText(String.valueOf(entity.getValue()));
+		txtQtd.setText(String.valueOf(entity.getQtd()));
+		txtValueIn.setText(String.valueOf(entity.getValuein()));
+		txtValueOut.setText(String.valueOf(entity.getValueout()));
 		AreaDescription.setText(entity.getDescription());
 	}
 	
